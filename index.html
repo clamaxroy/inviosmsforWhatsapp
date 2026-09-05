@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b0e">
+  <title>With You Agency - SMS</title>
+
+  <style>
+    :root {
+      --bg: #090b0e;
+      --card: #14181d;
+      --card2: #1b2026;
+      --border: #2a3139;
+      --text: #f6f7f9;
+      --muted: #939ba5;
+      --success: #31d17c;
+      --danger: #ff6b6b;
+      --button: #ffffff;
+      --buttonText: #090b0e;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body { display: flex; justify-content: center; padding: 22px 14px 40px; }
+    .app { width: 100%; max-width: 520px; }
+    .header { padding: 8px 3px 21px; }
+    .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    h1 { margin: 0; font-size: 31px; line-height: 1.05; letter-spacing: -.035em; }
+    .subtitle { margin: 10px 0 0; color: var(--muted); font-size: 15px; line-height: 1.45; }
+    .card { padding: 18px; border-radius: 21px; background: var(--card); border: 1px solid var(--border); box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+    .field { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 8px; color: #d8dde3; font-size: 13px; font-weight: 750; }
+    input, select {
+      width: 100%; min-height: 55px; padding: 0 15px; border: 1px solid var(--border); border-radius: 14px;
+      background: var(--card2); color: var(--text); font: inherit; font-size: 16px; outline: none;
+    }
+    input:focus, select:focus { border-color: #697583; }
+    input::placeholder { color: #707985; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .preview { padding: 14px; margin-top: 4px; border-radius: 15px; border: 1px solid var(--border); background: #0f1216; }
+    .preview-title { margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+    .preview-text { font-size: 14px; line-height: 1.5; color: #d9dde2; word-break: break-word; }
+    button { width: 100%; min-height: 59px; margin-top: 18px; border: 0; border-radius: 16px; background: var(--button); color: var(--buttonText); font-size: 16px; font-weight: 900; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    .loader { display: none; width: 21px; height: 21px; margin: 0 auto; border: 2px solid rgba(0,0,0,.18); border-top-color: #000; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status { display: none; margin-top: 14px; padding: 13px 14px; border-radius: 14px; font-size: 14px; line-height: 1.4; }
+    .status.success { display: block; color: #9bf0bd; border: 1px solid rgba(49,209,124,.35); background: rgba(49,209,124,.10); }
+    .status.error { display: block; color: #ffb0b0; border: 1px solid rgba(255,107,107,.35); background: rgba(255,107,107,.10); }
+    .footer { padding-top: 17px; color: #606974; text-align: center; font-size: 12px; }
+    #smsFrame { display: none; }
+
+    @media (max-width: 430px) {
+      body { padding: 15px 12px 30px; }
+      h1 { font-size: 28px; }
+      .card { padding: 15px; border-radius: 18px; }
+      .grid { grid-template-columns: 1fr; gap: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="eyebrow">With You Agency</div>
+      <h1>Invia contatto</h1>
+      <p class="subtitle">Inserisci i dati e invia l'SMS. Il candidato potrà aprire direttamente WhatsApp del dipendente selezionato.</p>
+    </header>
+
+    <section class="card">
+      <form id="smsForm" action="https://script.google.com/macros/s/AKfycbx6bsmbAVS2WPauFz8GHNvb-nswGUbTr6rM3lOtB0gjT_e2x2So9E_dRPdkDRwqPifI/exec" method="POST" target="smsFrame">
+        <div class="field">
+          <label for="employeeId">Dipendente</label>
+          <select id="employeeId" name="employeeId" required>
+            <option value="">Seleziona il tuo profilo</option>
+            <option value="ilaria">Ilaria</option>
+            <option value="olga">Olga</option>
+            <option value="klizia">Klizia</option>
+            <option value="marta">Marta</option>
+            <option value="claudio">Claudio</option>
+          </select>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="firstName">Nome destinatario</label>
+            <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Es. Mario" required>
+          </div>
+
+          <div class="field">
+            <label for="lastName">Cognome destinatario</label>
+            <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Es. Rossi" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="recipientPhone">Numero destinatario</label>
+          <input id="recipientPhone" name="recipientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Es. 3331234567" required>
+        </div>
+
+        <div class="preview">
+          <div class="preview-title">Anteprima SMS</div>
+          <div class="preview-text" id="previewText">Compila i dati per visualizzare l'anteprima.</div>
+        </div>
+
+        <button id="sendButton" type="submit">
+          <span id="buttonText">INVIA SMS</span>
+          <span class="loader" id="loader"></span>
+        </button>
+
+        <div id="status" class="status"></div>
+      </form>
+
+      <iframe id="smsFrame" name="smsFrame" title="Invio SMS"></iframe>
+    </section>
+
+    <div class="footer">Primo contatto via SMS · Conversazione successiva su WhatsApp</div>
+  </main>
+
+  <script>
+    const employeeData = {
+      ilaria: { name: 'Ilaria', whatsapp: 'https://wa.me/393513306578' },
+      olga: { name: 'Olga', whatsapp: 'https://wa.me/393791952583' },
+      klizia: { name: 'Klizia', whatsapp: 'https://wa.me/393516043872' },
+      marta: { name: 'Marta', whatsapp: 'https://wa.me/393519856148' },
+      claudio: { name: 'Claudio', whatsapp: 'https://wa.me/393513579606' }
+    };
+
+    const form = document.getElementById('smsForm');
+    const employeeSelect = document.getElementById('employeeId');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const preview = document.getElementById('previewText');
+    const sendButton = document.getElementById('sendButton');
+    const buttonText = document.getElementById('buttonText');
+    const loader = document.getElementById('loader');
+    const statusBox = document.getElementById('status');
+
+    let sending = false;
+    let timeoutId = null;
+
+    [employeeSelect, firstNameInput, lastNameInput].forEach(function(element) {
+      element.addEventListener('input', updatePreview);
+      element.addEventListener('change', updatePreview);
+    });
+
+    function updatePreview() {
+      const employee = employeeData[employeeSelect.value];
+      const firstName = firstNameInput.value.trim();
+
+      if (!employee || !firstName) {
+        preview.textContent = 'Compila i dati per visualizzare l’anteprima.';
+        return;
+      }
+
+      preview.textContent =
+        'Ciao ' + firstName +
+        ', sono ' + employee.name +
+        ' di With You Agency. Ho un’offerta di lavoro per te. Scrivimi: ' +
+        employee.whatsapp;
+    }
+
+    form.addEventListener('submit', function(event) {
+      clearStatus();
+
+      if (sending) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!form.checkValidity()) return;
+
+      sending = true;
+      setLoading(true);
+
+      timeoutId = setTimeout(function() {
+        if (sending) {
+          sending = false;
+          setLoading(false);
+          showError('Nessuna risposta dal server. Controlla la connessione e riprova.');
+        }
+      }, 20000);
+    });
+
+    window.addEventListener('message', function(event) {
+      const data = event.data;
+      if (!data || data.type !== 'WITHYOU_SMS_RESULT') return;
+
+      clearTimeout(timeoutId);
+      sending = false;
+      setLoading(false);
+
+      if (data.success) {
+        showSuccess('SMS inviato a ' + data.recipient + '.');
+        firstNameInput.value = '';
+        lastNameInput.value = '';
+        document.getElementById('recipientPhone').value = '';
+        updatePreview();
+        setTimeout(function() { firstNameInput.focus(); }, 100);
+      } else {
+        showError(data.message || 'Invio SMS non riuscito.');
+      }
+    });
+
+    function setLoading(active) {
+      sendButton.disabled = active;
+      buttonText.style.display = active ? 'none' : 'inline';
+      loader.style.display = active ? 'block' : 'none';
+    }
+
+    function showSuccess(message) {
+      statusBox.className = 'status success';
+      statusBox.textContent = '✓ ' + message;
+    }
+
+    function showError(message) {
+      statusBox.className = 'status error';
+      statusBox.textContent = message;
+    }
+
+    function clearStatus() {
+      statusBox.className = 'status';
+      statusBox.textContent = '';
+    }
+  </script>
+</body>
+</html>
